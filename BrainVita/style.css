@@ -34,7 +34,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-#reset-btn {
+#reset-btn, #undo-btn {
     padding: 12px 25px;
     background-color: #007bff;
     color: white;
@@ -43,9 +43,10 @@ h1 {
     cursor: pointer;
     font-size: 1.1em;
     transition: background-color 0.3s;
+    margin: 0 5px;
 }
 
-#reset-btn:hover {
+#reset-btn:hover, #undo-btn:hover {
     background-color: #0056b3;
 }
 

@@ -4,6 +4,7 @@ class BrainVitaGame {
         this.selectedPeg = null;
         this.moveCount = 0;
         this.pegCount = 32;
+        this.moveHistory = [];
         this.initializeBoard();
         this.renderBoard();
         this.setupEventListeners();
@@ -68,6 +69,10 @@ class BrainVitaGame {
         
         document.getElementById('reset-btn').addEventListener('click', () => {
             this.resetGame();
+        });
+        
+        document.getElementById('undo-btn').addEventListener('click', () => {
+            this.undoMove();
         });
     }
 
@@ -154,6 +159,13 @@ class BrainVitaGame {
     }
 
     makeMove(fromRow, fromCol, toRow, toCol) {
+        // Save current state for undo
+        this.moveHistory.push({
+            board: JSON.parse(JSON.stringify(this.board)),
+            moveCount: this.moveCount,
+            pegCount: this.pegCount
+        });
+        
         // Move the peg
         this.board[fromRow][fromCol] = 1; // From position becomes empty
         this.board[toRow][toCol] = 2;     // To position gets the peg
@@ -192,7 +204,28 @@ class BrainVitaGame {
 
     resetGame() {
         this.selectedPeg = null;
+        this.moveHistory = [];
         this.initializeBoard();
+        this.renderBoard();
+    }
+    undoMove() {
+        if (this.moveHistory.length === 0) {
+            alert("No moves to undo!");
+            return;
+        }
+        
+        // Get the last move
+        const lastState = this.moveHistory.pop();
+        
+        // Restore the board state
+        this.board = lastState.board;
+        this.moveCount = lastState.moveCount;
+        this.pegCount = lastState.pegCount;
+        
+        // Deselect any selected peg
+        this.deselectPeg();
+        
+        // Re-render the board
         this.renderBoard();
     }
 }
